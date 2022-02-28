@@ -4,15 +4,15 @@ steps:
     args: ["clone", "https://RaviDoddapaneni:B56VtGxusPj_Emv1vNU5@pscode.lioncloud.net/ps-plaform/application/profile.git", "-b", "cicd"]
   # build the container image
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "europe-west2-docker.pkg.dev/silent-region-341317/services/neobank-retail-profile-service:$SHORT_SHA", "."]
+    args: ["build", "-t", "europe-west2-docker.pkg.dev/decisive-unison-342009/cloud-builders:$SHORT_SHA", "."]
     # push container image
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "europe-west2-docker.pkg.dev/silent-region-341317/services/neobank-retail-profile-service:$SHORT_SHA"]
+    args: ["push", "europe-west2-docker.pkg.dev/decisive-unison-342009/cloud-builders:$SHORT_SHA"]
     # deploy container image to GKE
   - name: "gcr.io/cloud-builders/gke-deploy"
     args:
       - run
       - --filename=k8s
-      - --image=europe-west2-docker.pkg.dev/silent-region-341317/services/neobank-retail-profile-service:$SHORT_SHA
+      - --image=europe-west2-docker.pkg.dev/decisive-unison-342009/cloud-builders:$SHORT_SHA
       - --location=europe-west2
-      - --cluster=autopilot-playground-1
+      - --cluster=gke-my-app-vue
