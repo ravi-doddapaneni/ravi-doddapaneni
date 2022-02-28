@@ -1,0 +1,29 @@
+variables:
+  DOCKER_DRIVER: overlay
+  CONTAINER_REGISTRY: https://us-central1-docker.pkg.dev/lahiri-one/neobank
+
+stages:
+#  - build
+  - package
+
+#gradle-build:
+#  stage: build
+#  image: gradle:7-jdk17
+#  script: "./gradlew build"
+#  tags: [ci] 
+#  artifacts:
+#    paths:
+#      - build/libs/*.jar
+
+docker-build:
+  stage: package
+  image: docker:stable
+  services:
+    - docker:dind
+  tags: [ci] 
+  script:
+  - docker build -t us-central1-docker.pkg.dev/lahiri-one/neobank:profile .
+  - echo $neobank_docker_registry | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+  - docker push us-central1-docker.pkg.dev/lahiri-one/neobank:profile
+  after_script:
+    - docker logout https://us-central1-docker.pkg.dev
