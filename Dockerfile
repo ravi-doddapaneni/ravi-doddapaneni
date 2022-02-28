@@ -1,6 +1,15 @@
+FROM openjdk:11-jdk-slim-buster as build
+RUN mkdir -p /source
+WORKDIR source
+
+COPY src ./src
+COPY build.gradle .
+COPY gradlew .
+COPY gradle ./gradle
+COPY gradle.properties .
+RUN chmod +x ./gradlew && ./gradlew build
+
 FROM openjdk:11-jre-slim-buster
-COPY  ./build/libs/profile-1.0.0.jar /app.jar
+COPY --from=build /source/build/libs/*.jar /app.jar
 EXPOSE 8080
-RUN groupadd -r user && useradd -r -g user user
-USER user
 ENTRYPOINT ["java", "-jar", "/app.jar"]
